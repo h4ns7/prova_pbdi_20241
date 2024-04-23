@@ -46,42 +46,89 @@
 -- END $$;
 
 
-DO $$
-DECLARE
-    -- Declaração do cursor
-    cur_nomes_pais REFCURSOR;
-    -- Variáveis para armazenar os valores do cursor
-    v_country VARCHAR(100);
-    v_descricao_mais_long TEXT;
-    -- Variável para o nome da tabela
-    v_nome_tabela VARCHAR(200) := 'dados_vinhos';
-BEGIN 
-    -- Abertura do cursor
-    OPEN cur_nomes_pais FOR EXECUTE 
-        format(
-            '
-            SELECT country, MAX(description) AS descricao_mais_long
-            FROM %I
-            GROUP BY country;
-            ',
-            v_nome_tabela
-        );
+-- DO $$
+-- DECLARE
+--     -- Declaração do cursor
+--     cur_nomes_pais REFCURSOR;
+--     -- Variáveis para armazenar os valores do cursor
+--     v_country VARCHAR(100);
+--     v_descricao_mais_long TEXT;
+--     -- Variável para o nome da tabela
+--     v_nome_tabela VARCHAR(200) := 'dados_vinhos';
+-- BEGIN 
+--     -- Abertura do cursor
+--     OPEN cur_nomes_pais FOR EXECUTE 
+--         format(
+--             '
+--             SELECT country, MAX(description) AS descricao_mais_long
+--             FROM %I
+--             GROUP BY country;
+--             ',
+--             v_nome_tabela
+--         );
         
-    -- Loop para recuperar os resultados do cursor e levantar avisos
-    LOOP
-        FETCH cur_nomes_pais INTO v_country, v_descricao_mais_long;
-        -- Sair do loop quando não houver mais resultados
-        EXIT WHEN NOT FOUND;
-        -- Levantar aviso com os resultados
-        RAISE NOTICE 'País: %, Descrição Mais Longa: %', v_country, v_descricao_mais_long;
-    END LOOP;
+--     -- Loop para recuperar os resultados do cursor e levantar avisos
+--     LOOP
+--         FETCH cur_nomes_pais INTO v_country, v_descricao_mais_long;
+--         -- Sair do loop quando não houver mais resultados
+--         EXIT WHEN NOT FOUND;
+--         -- Levantar aviso com os resultados
+--         RAISE NOTICE 'País: %, Descrição Mais Longa: %', v_country, v_descricao_mais_long;
+--     END LOOP;
     
-    -- Fechar o cursor
-    CLOSE cur_nomes_pais;
-END $$;
+--     -- Fechar o cursor
+--     CLOSE cur_nomes_pais;
+-- END $$;
 
 
 
+
+
+-- CREATE TABLE resultados_vinhos (
+--     id SERIAL PRIMARY KEY,
+--     nome_pais VARCHAR(100),
+--     preco_medio NUMERIC,
+--     descricao_mais_long TEXT
+-- );
+
+
+-- DO $$
+-- DECLARE
+--     -- Declaração do cursor
+--     cur_nomes_pais REFCURSOR;
+--     -- Variáveis para armazenar os valores do cursor
+--     v_country VARCHAR(100);
+--     v_preco_medio NUMERIC;
+--     v_descricao_mais_long TEXT;
+--     -- Variável para o nome da tabela
+--     v_nome_tabela VARCHAR(200) := 'dados_vinhos';
+-- BEGIN 
+--     -- Abertura do cursor
+--     OPEN cur_nomes_pais FOR EXECUTE 
+--         format(
+--             '
+--             SELECT country, SUM(price) / COUNT(*) AS preco_medio, 
+--             MAX(LENGTH(description)) AS max_length
+--             FROM %I
+--             GROUP BY country
+--             ORDER BY preco_medio DESC; -- Ordenar por preços maiores
+--             ',
+--             v_nome_tabela
+--         );
+        
+--     -- Loop para recuperar os resultados do cursor e inserir na tabela resultados_vinhos
+--     LOOP
+--         FETCH cur_nomes_pais INTO v_country, v_preco_medio, v_descricao_mais_long;
+--         -- Sair do loop quando não houver mais resultados
+--         EXIT WHEN NOT FOUND;
+--         -- Inserir os resultados na tabela
+--         INSERT INTO resultados_vinhos (nome_pais, preco_medio, descricao_mais_long) 
+--         VALUES (v_country, v_preco_medio, v_descricao_mais_long);
+--     END LOOP;
+    
+--     -- Fechar o cursor
+--     CLOSE cur_nomes_pais;
+-- END $$;
 
 
 
